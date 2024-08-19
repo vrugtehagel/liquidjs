@@ -347,4 +347,23 @@ describe('filters/string', function () {
       expect(html).toEqual('foo, bar, and baz')
     })
   })
+  describe('json_parse', function () {
+    it('should return nil for nil',
+      () => test(`
+        {%- assign value = nil | json_parse -%}
+        {%- if value == nil -%}ok{%- else -%}fail{%- endif -%}
+      `, 'ok'))
+    it('should return nil for ""',
+      () => test(`
+        {%- assign value = "" | json_parse -%}
+        {%- if value == nil -%}ok{%- else -%}fail{%- endif -%}
+      `, 'ok'))
+    it('should JSON-parse the string otherwise',
+      () => test(`
+        {%- assign value = '{"foo":"ok"}' | json_parse -%}
+        {{ value.foo }}`, 'ok'))
+    it('should throw if the string is not valid JSON', () => {
+      return expect(test('{% assign value = "foo" | json_parse %}', 'none')).rejects.toThrow(/^Unexpected token/)
+    })
+  })
 })

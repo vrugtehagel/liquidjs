@@ -199,3 +199,8 @@ export function array_to_sentence_string (this: FilterImpl, array: unknown[], co
       return `${array.slice(0, -1).join(', ')}, ${connector} ${array[array.length - 1]}`
   }
 }
+
+export function json_parse (this: FilterImpl, input: string) {
+  const str = stringify(input)
+  return str ? JSON.parse(str) : null;
+}
